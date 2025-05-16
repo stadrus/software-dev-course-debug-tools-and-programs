@@ -4,32 +4,42 @@ const cart = [
   { name: "Headphones", price: 200 }
 ];
 
-function calculateTotal(cartItems) {
-  let total = 0;
-  for (let i = 0; i <= cartItems.length; i++) { // Bug: <= should be <
-      total += cartItems[i].price; // Bug: cartItems[i] is undefined on the last iteration
+
+  
+function calculateTotal(cart) {
+  let sum = cart.reduce((sum,item) => sum + item.price, 0);// removed .fliter() error within the console. Reduce() is a method thatI could use an acc to sum the prices of each item.  removed the for loop and replaced it with fat arrow. 
+  // for (let i = 0; i <  cart.length; i++) { // Bug: <= should be <
+  //     total += cart[i].price[i]; // Bug: cartItems[i] is undefined on the last iteration
+  return sum;
   }
-  return total;
+
+
+function applyDiscount(total, discountRate){
+    discountRate = total * 0.2; //set discount rate at 20% discount sum * 0.2
+    return  sum - discountRate; //bug: Missing validation for discountRate the total should refelect final price after discount
 }
 
-function applyDiscount(total, discountRate) {
-  return total - total * discountRate; // Bug: Missing validation for discountRate
-}
-
-function generateReceipt(cartItems, total) {
-  let receipt = "Items:\n";
-  cartItems.forEach(item => {
-      receipt += `${item.name}: $${item.price}\n`;
+function generateReceipt(cart, total) {
+  let receipt = `Items:\n`;
+  cart.forEach(item => {
+      receipt += `\n${item.name}: $${item.price}\n`;
   });
-  receipt += `Total: $${total.toFixed(2)}`; // Bug: total may not be a number
+  receipt += `\nSum: $${sum}\n`;
+  receipt += `Total: $${total.toFixed()}`; // Bug: total may not be a number. Had to fix the calculateTotal and applyDiscount functions to produce the correct number to the output
   return receipt;
 }
+// generateReceipt();
 
 // Debugging entry point
 console.log("Starting shopping cart calculation...");
-const total = calculateTotal(cart);
-const discountedTotal = applyDiscount(total, 0.2); // 20% discount
+const sum = calculateTotal(cart);
+
+const discountedTotal = applyDiscount(sum * 0.2); // 20% discount
+
 const receipt = generateReceipt(cart, discountedTotal);
 
-document.getElementById("total").textContent = `Total: $${discountedTotal}`;
+console.log(`Total: ${discountedTotal}`);
 document.getElementById("receipt").textContent = receipt;
+
+// module.exports = {calculateTotal, applyDiscount, generateReceipt};
+
